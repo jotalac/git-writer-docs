@@ -19,7 +19,6 @@ export default defineConfig({
       { text: 'Git Sync', link: '/git-sync' },
       { text: 'Architecture', link: '/architecture' },
     ],
-
     sidebar: [
       {
         text: 'Guide',
