@@ -1,0 +1,27 @@
+:root {
+  --git-color: #f03c2e;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #c82a21, var(--git-color));
+  --vp-c-brand-1: var(--git-color);
+  --vp-button-brand-bg: var(--git-color);
+  --vp-c-brand-2: color-mix(in srgb, var(--git-color), white 20%);
+}
+
+@media (min-width: 640px) {
+  .text {
+    max-width: 676px !important;
+  }
+}
+
+.vp-dark {
+  display: none;
+}
+
+.dark {
+  .vp-dark {
+    display: block;
+  }
+  .vp-light {
+    display: none;
+  }
+}

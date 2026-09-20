@@ -1,0 +1,30 @@
+{
+  "name": "git-writer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jotalac/git-writer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jotalac/git-writer/issues"
+  },
+  "homepage": "https://github.com/jotalac/git-writer#readme",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "vitepress": "^1.6.4"
+  }
+}
