@@ -1,113 +1,92 @@
-# Usage & Keyboard Shortcuts
+# Editor & Shortcuts
 
-This guide covers how to navigate, organize, and write effectively in GitWriter, along with a complete reference of keyboard shortcuts.
+GitWriter's editor is a **live preview**: you write plain Markdown, and it's shown formatted as you type. The Markdown syntax is hidden everywhere except where you're editing, so the note reads like a rendered page but stays a plain text file.
 
----
+<Screenshot src="editor-live-preview.png" caption="The live preview: the syntax shows only on the line with the cursor" />
 
-## Editor Workflow
+## Writing
 
-GitWriter combines rendered Markdown with plain text editing through a **hybrid block model**:
+- **Formatting.** `**bold**`, `*italic*`, `~~strikethrough~~`, `` `code` `` and `[links](https://…)` are shown formatted. Move the cursor into them to see and edit the syntax.
+- **Headings, quotes and lists.** `#` headings, `>` quotes (including GitHub alerts such as `> [!TIP]`), bulleted and numbered lists. Pressing <kbd>Enter</kbd> in a list continues it with the next bullet or number.
+- **Task lists.** `- [ ]` and `- [x]` are shown as checkboxes. Click one to check or uncheck it.
+- **Code blocks.** Fenced code blocks are syntax-highlighted for the language after the opening ```` ``` ````. The fences are hidden until you edit the block.
+- **Maths.** Inline `$x^2$` and block `$$ … $$` formulas are rendered with LaTeX. Click a formula to edit its source.
+- **Tables, images and horizontal rules** are drawn in place. Click one to edit its Markdown.
+- **Links.** Click a link to open it. While you edit a link, a click only moves the cursor; hold <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> to open it anyway.
 
-- **Rendered by Default**: Notes are displayed as cleanly styled rich text with syntax highlighting, mathematical equations, formatted lists, embedded images...
-- **In-Place Block Editing**: Click or tap any paragraph, heading, list item, or code block to instantly edit that block. Once finished, click elsewhere or press `Esc` to return to rendered view.
-- **Interactive Checklists**: Task list checkboxes (`- [ ]` and `- [x]`) can be toggled by clicking directly on them in rendered mode without having to enter edit mode.
-- **Math & LaTeX**: Write inline equations with `$f(x) = x^2$` or display blocks with `$$\int_0^\infty e^{-x} dx$$`.
-- **Image Attachments**:
-  - **Paste from Clipboard**: Press <kbd>Ctrl</kbd> + <kbd>V</kbd> (or <kbd>Cmd</kbd> + <kbd>V</kbd> on macOS) with an image in your clipboard. GitWriter automatically saves the image to your notebook folder `images` and inserts the Markdown image tag.
-  - **Drag and Drop**: Drag image files from your file manager directly into the editor.
+### Images
 
----
+- **Paste** an image with <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>V</kbd>, or **drop** an image file onto the editor (desktop). GitWriter saves it to the notebook's `images` folder and inserts the Markdown for it.
+- On mobile, use the **Add image** and **Camera** buttons in the keyboard toolbar.
+- **Resize** an image with a right-click (desktop): choose a size from 0.1× to 5×. The size is written into the alt text, as in Obsidian: `![photo|300](images/photo.png)`.
 
-## Organizing Notebooks & Files
+### Spell check (desktop)
 
-### Notebooks
-- Each notebook is a self-contained directory backed by a Git repository.
-- You can create a new blank notebook, clone a remote repository, or open an existing folder on your disk.
-- Switch between notebooks using the notebook selector in the sidebar.
+Misspelled words are underlined. Right-click one (or press <kbd>Shift</kbd> + <kbd>F10</kbd>, or <kbd>Control</kbd> + <kbd>Return</kbd> on macOS) for suggestions, or to add the word to your dictionary. The language is set in [Settings](/settings#language). Code, links and maths aren't checked.
 
-### File Tree & Navigation
-- **Folders & Notes**: Create nested folders and Markdown files (`.md`) to organize your notes.
-- **Drag and Drop Reorganization**: Drag files and folders within the sidebar tree to move them into different folders.
-- **Context Menus**: Right-click any item in the file tree to rename, delete, or inspect it.
-- **Tabs**: Open multiple notes simultaneously in tabs across the top of the editor.
+### Find
 
----
+Press <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>F</kbd>, or <kbd>/</kbd> when you're not typing in the note, to search in the open note.
 
-## Keyboard Shortcuts Reference
+### Export to PDF
 
-GitWriter provides keyboard shortcuts designed to keep your hands on the keyboard for writing and navigation.
+Right-click a note in the file tree and choose **Export to PDF**. You pick where to save it; the Downloads folder is suggested.
 
-### Block Editing & Movement
+## Mobile
 
-| Shortcut | Action | Description |
-| :--- | :--- | :--- |
-| <kbd>Enter</kbd> | Split Block / New Item | Splits the current block at cursor into a new block, or adds new block bellow |
-| <kbd>Shift</kbd> + <kbd>Enter</kbd> | Newline within Block | Adds a newline without creating a new block |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Enter</kbd> | New Block Below | Exits the active block and creates an empty block beneath it |
-| <kbd>Alt</kbd> + <kbd>↑</kbd> | Move Block Up | Swaps the current block with the block above |
-| <kbd>Alt</kbd> + <kbd>↓</kbd> | Move Block Down | Swaps the current block with the block below |
-| <kbd>Tab</kbd> | Indent | Indents the active list item or line |
-| <kbd>Shift</kbd> + <kbd>Tab</kbd> | Outdent | Un-indents the active list item or line |
-| <kbd>Backspace</kbd> *(at start)* | Merge Block | Merges the active block into the previous block |
-| <kbd>Backspace</kbd> *(when empty)* | Delete Block | Removes the empty block and shifts focus |
-| <kbd>Esc</kbd> | Exit Edit Mode | Deselects the current block and returns to rendered view |
-| <kbd>↑</kbd> / <kbd>↓</kbd> *(at boundary)* | Navigate Blocks | Moves cursor to the preceding or following block |
+On Android and iOS, a toolbar above the keyboard gives you headings, bold, italic, lists, indentation, quotes, code, checkboxes, links, maths and images. The buttons toggle: tapping **Bold** on bold text makes it normal again.
 
-### Text Formatting
+<Screenshot src="mobile-toolbar.png" caption="The keyboard toolbar on Android" narrow />
 
-| Shortcut | Markdown Syntax | Action |
-| :--- | :--- | :--- |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>B</kbd> | `**bold**` | Toggle bold formatting |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>I</kbd> | `*italic*` | Toggle italic formatting |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>K</kbd> | `[](url)` | Insert Markdown link template |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>E</kbd> | `` `code` `` | Toggle inline code |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>V</kbd> | `![image](path)` | Paste image from clipboard |
+### Android widget
 
-### Document History
+Add the **GitWriter** widget to your home screen to see the notes of the active notebook. Tap a note to open it, or create a new note straight from the widget.
+
+<Screenshot src="android-widget.png" caption="The home screen widget" narrow />
+
+## Keyboard shortcuts
+
+On macOS, use <kbd>Cmd</kbd> wherever <kbd>Ctrl</kbd> is listed.
+
+### Formatting
 
 | Shortcut | Action |
 | :--- | :--- |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Z</kbd> | Undo last text edit or structural block modification |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | Redo |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Y</kbd> | Redo (alternative) |
+| <kbd>Ctrl</kbd> + <kbd>B</kbd> | Bold |
+| <kbd>Ctrl</kbd> + <kbd>I</kbd> | Italic |
+| <kbd>Ctrl</kbd> + <kbd>E</kbd> | Inline code |
+| <kbd>Ctrl</kbd> + <kbd>K</kbd> | Insert a link |
+| <kbd>Ctrl</kbd> + <kbd>V</kbd> | Paste (an image too) |
 
-### Search & Find
-
-| Shortcut | Action |
-| :--- | :--- |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>F</kbd> | Open Find bar / focus search query |
-| <kbd>Enter</kbd> *(in find bar)* | Jump to next match |
-| <kbd>Shift</kbd> + <kbd>Enter</kbd> *(in find bar)* | Jump to previous match |
-| <kbd>Esc</kbd> *(in find bar)* | Close Find bar |
-
-### Tab Management
+### Editing
 
 | Shortcut | Action |
 | :--- | :--- |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>T</kbd> | Open a new tab |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>W</kbd> | Close active tab |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Tab</kbd> | Switch to next tab |
-| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Tab</kbd> | Switch to previous tab |
+| <kbd>Enter</kbd> | New line; continues a list |
+| <kbd>Shift</kbd> + <kbd>Enter</kbd> | New line without continuing the list |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> | Indent / outdent the line or list item |
+| <kbd>Alt</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd> | Move the line (or the selected lines) up / down |
+| <kbd>Ctrl</kbd> + <kbd>Z</kbd> | Undo |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> or <kbd>Ctrl</kbd> + <kbd>Y</kbd> | Redo |
+| <kbd>Esc</kbd> | Leave the editor (unfocus) |
 
-### Navigation When No Block is Active
+### Find
 
-When you are viewing a note and no block is currently being edited:
-
-| Key | Action |
+| Shortcut | Action |
 | :--- | :--- |
-| <kbd>↓</kbd> | Focus the first block of the note |
-| <kbd>↑</kbd> | Focus the last block of the note |
-| <kbd>Enter</kbd> | Append and focus a new block at the end of the note |
+| <kbd>Ctrl</kbd> + <kbd>F</kbd> or <kbd>/</kbd> | Open the find bar |
+| <kbd>Enter</kbd> / <kbd>Shift</kbd> + <kbd>Enter</kbd> | Next / previous match |
+| <kbd>Esc</kbd> | Close the find bar |
 
----
+### Tabs and notes
 
-## Mobile Experience
+| Shortcut | Action |
+| :--- | :--- |
+| <kbd>Ctrl</kbd> + <kbd>T</kbd> | New tab |
+| <kbd>Ctrl</kbd> + <kbd>W</kbd> | Close the tab |
+| <kbd>Ctrl</kbd> + <kbd>Tab</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Tab</kbd> | Next / previous tab |
+| <kbd>Ctrl</kbd> + <kbd>N</kbd> | New note (when no note is open) |
+| <kbd>F2</kbd> | Rename the open note (file tree focused) |
+| <kbd>Ctrl</kbd> + <kbd>D</kbd> | Duplicate the open note (file tree focused) |
+| <kbd>Delete</kbd> | Delete the open note (file tree focused) |
 
-On Android and iOS devices, GitWriter adapts the interface:
-
-- **Mobile Keyboard Toolbar**: An on-screen toolbar appears above the soft keyboard providing quick access to headings, formatting (bold, italic, code), lists, checklists, photo/camera attachments, ...
-
-
-## Next Steps
-
-You can proceed to the [Git Sync](/git-sync) guide to configure your remote repository and personal access token.

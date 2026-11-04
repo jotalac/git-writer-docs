@@ -1,38 +1,46 @@
 # Installation
 
-Download the latest binaries from the [Releases](https://github.com/jotalac/git-writer/releases) page.
+Download the latest build from the [Releases](https://github.com/jotalac/git-writer/releases) page.
 
 ## Desktop
 
 ### Linux
-Download the `.deb` package (Debian/Ubuntu) or `.rpm` package (Fedora/RHEL) and install it.
+
+Download the `.deb` package (Debian, Ubuntu) or the `.rpm` package (Fedora, RHEL) and install it with your package manager. Builds are available for both `x86_64` and `arm64`.
 
 ### macOS
-1. Download the `.dmg` from releases.
-2. Open the package and drag **GitWriter** to your `Applications` folder.
 
-> [!NOTE] Unsigned App Quarantine
-> Since the macOS build is currently unsigned, macOS Gatekeeper may show a quarantine notice. To allow the app to run, execute:
+1. Download the `.dmg`.
+2. Open it and drag **GitWriter** into your `Applications` folder.
+
+Builds are for Apple Silicon Macs only. The database driver the app uses ships no native library for Intel Macs.
+
+> [!NOTE] Unsigned app quarantine
+> The macOS build is not signed, so Gatekeeper may refuse to open it. To allow it, run:
 > ```bash
 > xattr -d com.apple.quarantine /Applications/GitWriter.app
 > ```
 
 ### Windows
-Download and run the `.exe` installer from the releases page and follow the setup wizard.
+
+Download the `.exe` installer and follow the setup wizard.
 
 ## Mobile
 
 ### Android
-Download the release `.apk` directly from the [Releases](https://github.com/jotalac/git-writer/releases) page and install it on your device (ensure *Install from unknown sources* is allowed in your Android settings).
-For better experience with automatic app updates you can you **Obtanium**
+
+Download the `.apk` and install it. You may need to allow *Install from unknown sources* for your browser or file manager.
+
+To get updates automatically, add the repository to [Obtainium](https://obtainium.imranr.dev/).
 
 ### iOS
-The iOS build is currently distributed as an unsigned `.ipa`. Sideload it using your free Apple ID with your preferred sideloading tool:
+
+The iOS build is an unsigned `.ipa`. Sideload it with your Apple ID using one of these tools:
+
 - [AltStore](https://altstore.io/)
 - [SideStore](https://sidestore.io/)
 - [Sideloadly](https://sideloadly.io/)
 
+## Next steps
 
-## Next Steps
-
-Once installed, you can look at the [usage & shortcuts](/usage) to control the app as fast as possible.
+Continue with the [tutorial](/tutorial/first-notebook) to create your first notebook.

@@ -13,10 +13,9 @@ export default defineConfig({
     logo: '/git-writer-logo.svg',
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Introduction', link: '/introduction' },
-      { text: 'Installation', link: '/installation' },
-      { text: 'Usage & Shortcuts', link: '/usage' },
-      { text: 'Git Sync', link: '/git-sync' },
+      { text: 'Guide', link: '/introduction' },
+      { text: 'Tutorial', link: '/tutorial/first-notebook' },
+      { text: 'Encryption', link: '/encryption' },
       { text: 'Architecture', link: '/architecture' },
     ],
     sidebar: [
@@ -25,17 +24,35 @@ export default defineConfig({
         items: [
           { text: 'Introduction', link: '/introduction' },
           { text: 'Installation', link: '/installation' },
-          { text: 'Usage & Shortcuts', link: '/usage' },
-          { text: 'Git Sync', link: '/git-sync' },
+        ],
+      },
+      {
+        text: 'Tutorial',
+        items: [
+          { text: '1. Your first notebook', link: '/tutorial/first-notebook' },
+          { text: '2. Connect a Git remote', link: '/tutorial/connect-remote' },
+          { text: '3. Add another device', link: '/tutorial/second-device' },
+          { text: '4. Encrypt a notebook', link: '/tutorial/encrypt-notebook' },
+        ],
+      },
+      {
+        text: 'Reference',
+        items: [
+          { text: 'Editor & Shortcuts', link: '/usage' },
+          { text: 'Syncing & Conflicts', link: '/git-sync' },
+          { text: 'Settings', link: '/settings' },
         ],
       },
       {
         text: 'Technical Details',
         items: [
+          { text: 'How Encryption Works', link: '/encryption' },
           { text: 'Architecture & Internals', link: '/architecture' },
         ],
       },
     ],
+
+    outline: [2, 3],
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/jotalac/git-writer' },

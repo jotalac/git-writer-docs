@@ -1,100 +1,46 @@
-# Technical Details & Architecture
+# Architecture & Internals
 
-GitWriter is created as a minimalistic, local-first, note-taking application. This document details the technical architecture, design decisions, cross-platform, and internal implementations.
+A short map of the code, for anyone who wants to read or change it. The [source is on GitHub](https://github.com/jotalac/git-writer).
 
----
+## Layers
 
-## High-Level Architecture
+GitWriter is written in **Kotlin Multiplatform** with **Compose Multiplatform**. Almost everything, from the UI down to the sync, is shared code. Only the app entry points and the Git implementation differ per platform.
 
-GitWriter is built using **Kotlin Multiplatform (KMP)** and **Compose Multiplatform (CMP)**, sharing all business logic, ui, data persistence, markdown parsing, and Git operations across desktop, Android, and iOS.
+<Diagram name="architecture-layers" alt="Shared code: Compose UI, ViewModels, features, persistence and Git interfaces. Platform code: the app entry points, JGit and libgit2" />
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                 Compose Multiplatform UI                     │
-│   (Material 3, Dynamic Color, Responsive Desktop & Mobile)  │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-┌──────────────────────────────▼──────────────────────────────┐
-│                  ViewModel & State Layer                    │
-│    (AndroidX Lifecycle ViewModel, Koin Multiplatform DI)    │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-┌──────────────────────────────▼──────────────────────────────┐
-│                    Domain & Business Logic                  │
-│       (Markdown Chunking, History Engine, Tree Models)      │
-└──────────────┬──────────────────────────────┬───────────────┘
-               │                              │
-┌──────────────▼─────────────┐ ┌──────────────▼───────────────┐
-│     Persistence Layer      │ │     Git Synchronization       │
-│  - AndroidX Room (SQLite)  │ │  - JVM/Android: Eclipse JGit │
-│  - AndroidX DataStore      │ │  - iOS: libgit2 (C-Interop)  │
-│  - FileKit & Native FS     │ │  - Conflict Resolution       │
-└────────────────────────────┘ └──────────────────────────────┘
-```
+## Modules
 
-### Module Structure
+| Module | What's in it |
+| :--- | :--- |
+| `shared` · `feature/editor` | The live preview editor, find, edit history, LaTeX, spell check, shortcuts |
+| `shared` · `feature/editor_sidebar` | The file tree, drag and drop, context menus |
+| `shared` · `feature/git_sync` | Sync, conflict resolution, [encryption](/encryption) |
+| `shared` · `feature/notebooks_management` | Notebooks in Room; creating, cloning, importing |
+| `shared` · `feature/pdf_export`, `feature/settings` | PDF export, settings |
+| `shared` · `core` | Database, Koin modules, platform abstractions |
+| `desktopApp`, `androidApp`, `iosApp` | Entry points, packaging, the Android widget (Glance) |
 
-The codebase is organized into targeted multiplatform modules and packages:
+Platform code lives in the usual source sets: `jvmAndAndroidMain` (JGit), `jvmMain`, `androidMain` and `iosMain` (libgit2).
 
-- **`shared`**: The core multiplatform engine containing all shared logic:
-  - `feature/editor`: Block-based Markdown chunker, active editor, LaTeX rendering, keyboard navigation, and history stack.
-  - `feature/editor_sidebar`: Recursive file tree, drag-and-drop file organization, and contextual actions.
-  - `feature/git_sync`: Multiplatform Git repository interfaces, synchronization pipelines, and conflict resolution dialogs.
-  - `feature/notebooks_management`: AndroidX Room DAO/Entity layer, local repository detection, and cloning workflows.
-  - `feature/settings`: Appearance preferences, dynamic colors, localization, and sync settings.
-  - `core`: Database initialization, Koin DI modules, clipboard utilities, image handlers, and platform abstraction hooks.
-- **`desktopApp`**: Desktop launcher leveraging JVM, configuring window drag areas, menus, and packaging for Linux, macOS, and Windows.
-- **`androidApp`**: Android application wrapper handling permissions, system theme integration, and Android lifecycle.
-- **`iosApp`**: Xcode project hosting the Compose Multiplatform `UIViewController`.
+## The live preview editor
 
+The whole note is **one text field**, so selecting, copying, undo and cursor movement work across the whole note. The formatting is only a view of it:
 
-## Synchronization Pipeline & Conflict Handling
+<Diagram name="live-preview-pipeline" alt="Note text is parsed into a syntax tree, turned into decorations, transformed into the shown text, and widgets are drawn over it" />
 
-Each notebook as a first-class Git repository. Synchronization follow this states:
+1. **Parse** the note with JetBrains' Markdown parser (GitHub Flavored Markdown).
+2. **Decorations** say how each range is shown: bold, hidden `**`, a heading, a checkbox. A decoration that touches the cursor shows its source instead.
+3. **Shown text** comes from a `VisualTransformation` that hides the syntax and maps cursor offsets between the note and what you see.
+4. **Overlays** (images, tables, maths, checkboxes) are composables placed over placeholders in the same layout pass, so they never lag behind the text.
 
-```
-[Local Changes] ──► [Commit] ──► [Git Fetch / Pull]
-                                             │
-                       ┌─────────────────────┴─────────────────────┐
-                       │                                           │
-                [Clean Fast-Forward]                        [Merge Conflict]
-                       │                                           │
-              [Git Push to Remote]                    [Interactive Resolver Dialog]
-                       │                                    (OURS vs. THEIRS)
-               [Status: UpToDate]                                  │
-                                                       [Commit Resolution & Push]
-```
+## Git
 
-### Conflict Resolution
+- **JGit** on desktop and Android, **libgit2** on iOS through C interop (built by `tools/build-libgit2.sh`).
+- Both implement the same interfaces (`GitSyncRepository`, `MirrorRepository`, `MailboxRepository`), and **the same contract tests** run against both, so every platform syncs the same way.
+- What a sync does is in [Syncing & Conflicts](/git-sync); encrypted notebooks are in [How Encryption Works](/encryption).
 
-When upstream changes conflict with local edits, GitWriter enters a `GitSyncStatus.Conflict` state and presents an interactive resolution dialog:
-- **Per-File Resolution**: Users can choose between keeping local changes (`CheckoutCommand.Stage.OURS`) or remote changes (`CheckoutCommand.Stage.THEIRS`) for each file.
-- **Batch Resolution**: One-click resolution to preserve either local or remote variants across all conflicting files.
-- **Safe Merging**: If desired, users can abort the merge (`git.reset(HARD)`) to restore the previous clean working state.
+## Data
 
----
-
-## Hybrid Block-Based Markdown Editor
-
-Rather than using a single monolithic `TextField` (which hinders rich formatting) or an embedded WebView (which consumes excessive memory and introduces rendering latency), GitWriter uses a **hybrid block editor**:
-
-### AST Markdown Chunking (`MarkdownChunker`)
-
-When a Markdown document is opened, GitWriter passes the raw text through `jetbrains-markdown` using GitHub Flavored Markdown rules (`GFMFlavourDescriptor`). 
-
-The parser constructs an Abstract Syntax Tree (AST) and segments the text into discrete semantic blocks (headings, paragraphs, code blocks, lists, blockquotes, math equations, ...).
-
-
-## Data Persistence & Offline-First Storage
-
-### Plain-Text Git Repositories
-
-GitWriter imposes **zero vendor lock-in**:
-- Notebooks are standard folders on the filesystem containing plain `.md` files, directories, and images.
-- A notebook is a standard Git worktree containing a `.git` directory.
-- Users can open, edit, or commit files using external tools (VS Code, Obsidian, Neovim, or the terminal) at any time.
-
-Default notebook storage locations:
-- **Desktop**: `~/Documents/git-writer-notebooks`
-- **Android**: App-specific external/internal storage directory (`.../git-writer-notes`)
-- **iOS**: Sandboxed `NSDocumentDirectory` (`.../Documents/git-writer-notebooks`)
+- **Notes** are plain files in a Git repository per notebook. Nothing else is needed to read them.
+- **Room (SQLite)** keeps the list of notebooks: folder, remote, credentials and, for encrypted notebooks, the key.
+- **DataStore** keeps the settings.

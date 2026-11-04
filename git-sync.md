@@ -1,59 +1,81 @@
-# Git Sync & Setup
+# Syncing & Conflicts
 
-GitWriter stores your notes as plain Markdown files in a Git repository and synchronizes them over HTTPS. Follow this guide to set up your repository and authenticate securely.
-(files encryption coming soon)
+Every notebook is a Git repository, and syncing it is plain Git: commit, pull, push. This page explains what happens during a sync and how to deal with conflicts. To set up a remote, see the [tutorial](/tutorial/connect-remote).
 
-## Step 1: Create a Git Repository
+## What a sync does
 
-1. Go to your preferred Git provider (such as [GitHub](https://github.com), [GitLab](https://gitlab.com), [Codeberg](https://codeberg.org)).
-2. Create a new repository.
-3. Set the repository visibility to **Private** to ensure your personal notes remain confidential.
-4. *(Optional)* Initialize with a `README.md` or keep it blank.
+<Diagram name="sync-steps" alt="A sync: commit all changes, pull, then push or resolve conflicts" />
 
----
+1. **Commit.** Every change in the notebook (edited, new, moved and deleted notes, images) is committed.
+2. **Pull.** GitWriter fetches what other devices pushed and merges it into your notes.
+3. **Push.** The result goes back to the remote, and every device can pull it on its next sync.
 
-## Step 2: Generate a Personal Access Token (PAT)
+If the open note changed during the pull, it's reloaded with the new content.
 
-Modern Git providers require a **Personal Access Token** instead of account passwords for HTTPS operations.
+For an [encrypted notebook](/tutorial/encrypt-notebook), the same three steps run against a local copy, and only encrypted files are uploaded. See [How encryption works](/encryption).
 
-> [!TIP] Security Best Practice: Use Fine-Grained Tokens
-> On GitHub, always create a **Fine-grained personal access token** scoped strictly to your notes repository. This follows the principle of least privilege.
+## When it syncs
 
-### GitHub Step-by-Step
+Tap the **sync button** to sync any time. With **Auto sync** on (Settings → Git Sync, on by default), GitWriter also syncs:
 
-1. In GitHub, click your profile picture (top-right) and navigate to **Settings**.
-2. Scroll to the bottom of the left sidebar and select **Developer settings**.
-3. Expand **Personal access tokens** and click **Fine-grained tokens**.
-4. Click **Generate new token**.
-5. Configure the following token settings:
-   - **Token name**: e.g., `GitWriter Notes`
-   - **Expiration**: Choose your preferred expiration period (e.g., 90 days, 1 year, or custom).
-   - **Repository access**: Select **Only select repositories**, then pick your notes repository (e.g., `my-notes`).
-     > [!IMPORTANT] Minimal Security Scope
-     > Scoping the token strictly to your notes repository ensures that even if the token were ever compromised, an attacker would have zero access to your other repositories, code, or personal data.
-   - **Permissions**: Under **Repository permissions**, find **Contents** and set access to **Access: Read and write**. This grants GitWriter permission to read, create, and update your markdown note files.
-6. Click **Generate token** at the bottom.
-7. **Copy and store your token safely** — GitHub will only show it once.
+- when a notebook is opened, which includes app start,
+- every **10 minutes** while the notebook is open and the device is online,
+- when the device **comes back online**,
+- when you **leave or close** the app.
 
-### Other Git Hosts (GitLab, Codeberg, Gitea)
-For other Git hosts, navigate to your account **Access Tokens** settings and create a token with repository read and write permissions (e.g., `read_repository` and `write_repository` scopes).
+An automatic sync waits until you've paused typing for 3 seconds. That way a pulled change never replaces the note in the middle of a sentence.
 
----
+## The sync button
 
-## Step 3: Connect GitWriter to your Repository
+The button shows the notebook's state:
 
-1. Open **GitWriter** on your device.
-2. On the notebook edit screen/clone screen and provide:
-   - **Repository URL**: The HTTPS clone URL of your repository (e.g., `https://github.com/username/my-notes.git`).
-   - **Username**: Your account username (e.g. your GitHub username), .
-   - **Password / Token**: Paste the Personal Access Token generated in Step 2.
-3. Confirm the changes.
+| State | Meaning |
+| :--- | :--- |
+| Up to date | The last sync succeeded. Tap to sync again. |
+| Syncing | A sync is running. |
+| Failed | The last sync failed. The error was shown at the bottom of the screen. Tap to retry. |
+| Merge conflicts | Some notes changed on two devices. Tap to resolve them. |
+| Offline | The device has no network connection. |
+| Remote unreachable | The device is online, but the remote can't be reached. |
+| Not configured | The notebook has no remote yet. See [Connect a Git remote](/tutorial/connect-remote). |
 
----
+<Screenshot src="sync-button-states.png" caption="The sync button in different states" />
 
-## Step 4: Syncing Notes
+## Conflicts
 
-Once connected:
-- Any note you write or modify is saved locally and tracked with Git commits.
-- GitWriter pulls remote updates and pushes your commits so that all your devices stay synchronized without relying on a proprietary cloud service.
-- If there is a unresolvable merge conflict you will be prompted to resolve in a pop up dialog.
+Git merges changes **line by line**. Two devices editing different notes, or different parts of the same note, merge without you noticing. A **conflict** happens only when two devices changed the same lines of the same note between syncs.
+
+### Resolving conflicts
+
+GitWriter opens the **Git merge conflict** dialog, which lists every conflicting note. For each one choose:
+
+- **Local:** keep this device's version.
+- **Remote:** keep the version from the other device.
+
+Or resolve all of them at once with **All local** or **All remote**.
+
+<Screenshot src="conflict-dialog.png" caption="The merge conflict dialog" />
+
+When the last conflict is resolved, GitWriter commits the result (a merge commit) and pushes it. If that push fails, nothing is lost: the resolution is committed locally and goes out with the next sync.
+
+**Abort sync** cancels the merge and puts the notebook back the way it was before the sync. Your local changes stay committed, so the conflict comes back on the next sync until you resolve it.
+
+::: tip Keeping both versions
+The dialog keeps one whole version of each note. If you want parts of both, choose one version, then copy the missing part from the other device after the sync.
+:::
+
+### Resolving conflicts automatically
+
+In **Settings → Git Sync → Conflict resolution** you can skip the dialog:
+
+| Strategy | What happens on a conflict |
+| :--- | :--- |
+| **Manual merge** (default) | The dialog asks you. |
+| **Auto merge** → *Always accept local changes* | This device's version always wins. |
+| **Auto merge** → *Always accept remote changes* | The other device's version always wins. |
+
+## Working with Git directly
+
+A notebook is a normal Git repository, so you can use any Git tool on it: look at the history with `git log`, restore an old version of a note, or edit the notes in another editor. GitWriter commits whatever it finds on the next sync.
+
+The exception is an encrypted notebook's remote. Don't push to it with other Git tools: it only accepts the encrypted files GitWriter writes.
