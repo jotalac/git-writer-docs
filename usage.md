@@ -22,7 +22,7 @@ GitWriter's editor is a **live preview**: you write plain Markdown, and it's sho
 
 ### Spell check (desktop)
 
-Misspelled words are underlined. Right-click one (or press <kbd>Shift</kbd> + <kbd>F10</kbd>, or <kbd>Control</kbd> + <kbd>Return</kbd> on macOS) for suggestions, or to add the word to your dictionary. The language is set in [Settings](/settings#language). Code, links and maths aren't checked.
+Misspelled words are underlined. Right-click one (or press <kbd>Shift</kbd> + <kbd>F10</kbd>, or <kbd>Control</kbd> + <kbd>Return</kbd> on macOS) for suggestions, or to add the word to your dictionary. GitWriter uses your system's dictionaries; [Spell Check](/spell-check) explains how to choose the language and install a dictionary.
 
 ### Find
 

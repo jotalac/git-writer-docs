@@ -39,6 +39,7 @@ export default defineConfig({
         text: 'Reference',
         items: [
           { text: 'Editor & Shortcuts', link: '/usage' },
+          { text: 'Spell Check', link: '/spell-check' },
           { text: 'Syncing & Conflicts', link: '/git-sync' },
           { text: 'Settings', link: '/settings' },
         ],

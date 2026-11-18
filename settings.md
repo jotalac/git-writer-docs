@@ -21,7 +21,7 @@ Open the settings with the gear button in the sidebar. On the desktop they open 
 | **App language** | English, Español, Čeština, Deutsch, 中文 |
 | **Spell check language** *(desktop)* | **Same as app language** (default), **No spell checking**, or any language that can be checked |
 
-Chinese can't be spell checked, so it isn't offered as a spell check language. On mobile, your keyboard checks the spelling instead.
+Chinese can't be spell checked, so it isn't offered as a spell check language. On mobile, your keyboard checks the spelling instead. If nothing is underlined on the desktop, see [Spell Check](/spell-check#setting-up-your-system).
 
 ## Git Sync
 

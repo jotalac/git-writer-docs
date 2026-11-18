@@ -8,6 +8,8 @@ Download the latest build from the [Releases](https://github.com/jotalac/git-wri
 
 Download the `.deb` package (Debian, Ubuntu) or the `.rpm` package (Fedora, RHEL) and install it with your package manager. Builds are available for both `x86_64` and `arm64`.
 
+For spell checking, install the Hunspell dictionary for your language, for example `hunspell-en-us`. See [Spell Check](/spell-check#linux).
+
 ### macOS
 
 1. Download the `.dmg`.
